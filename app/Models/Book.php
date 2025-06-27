@@ -29,4 +29,10 @@ class Book extends Model
     {
         return asset('storage/' . $this->cover_image);
     }
+
+    public function pinjams()
+    {
+        return $this->hasMany(Pinjam::class, 'book_id');
+    }
+
 }

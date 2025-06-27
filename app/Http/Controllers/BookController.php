@@ -110,6 +110,19 @@ public function destroy($id)
     return redirect('/')->with('Success', 'Data Book Berhasil Dihapus.');
 }
 
+public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    $books = Book::when($search, function ($query, $search) {
+        return $query->where('title', 'like', "%{$search}%")
+                     ->orWhere('author', 'like', "%{$search}%");
+    })->get();
+
+    return view('home', compact('books'));
+}
+
+
 
     
 }
