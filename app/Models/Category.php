@@ -2,12 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
-    public function books() : HasMany {
+    use HasFactory;
+
+    // Tambahkan properti ini untuk menentukan nama tabel secara manual
+    protected $table = 'zahid_categories';
+
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
+
+    /**
+     * Get the books for the category.
+     */
+    public function books()
+    {
         return $this->hasMany(Book::class);
     }
 }

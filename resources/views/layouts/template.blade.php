@@ -77,7 +77,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-        <a class="navbar-brand navbar-brand-custom" href="#">Libra</a>
+        <a class="navbar-brand navbar-brand-custom" href="/">Libra</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -91,9 +91,35 @@
                 </div>
             </form>
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
-                </li>
+    
+       @auth
+  @if(Auth::user()->role === 'admin')
+    <li class="nav-item">
+      <a class="nav-link" href="/dashboard">Manage Books</a>
+    </li>
+  @endif
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+      {{ Auth::user()->name }}
+    </a>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">{{ Auth::user()->email }}</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li>
+        <form action="/logout" method="post">
+          @csrf
+          <button type="submit" class="btn btn-link text-decoration-none">Logout</button>
+        </form>
+      </li>
+    </ul>
+  </li>
+@else
+  <li class="nav-item">
+    <a class="nav-link" href="{{ route('login') }}">Login</a>
+  </li>
+@endauth
+
                 <li class="nav-item">
                     <a class="nav-link" href="#">Pinjam</a>
                 </li>
@@ -103,6 +129,18 @@
     </nav>
 
     <main class="container my-5">
+        @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
         @yield('content')
     </main>
 
