@@ -9,17 +9,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PinjamController;
 
+
 use function Pest\Laravel\get;
 
 Route::get('/admin', function () {
     return view('books.dashboard');
 });
 
-Route::get('/', [BookController::class, 'homepage']);
+Route::get('/', [BookController::class, 'homepage'])->name('home');
 
 Route::get('/login', [AuthController::class, 'LoginForm'])->name('login');
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/logout',[AuthController::class,'logout']);
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/create-book', [BookController::class, 'create']);
@@ -55,3 +58,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Rute untuk menolak pinjaman
     Route::post('/admin/pinjaman/{id}/tolak', [PinjamController::class, 'tolak'])->name('pinjam.tolak');
 });
+
+

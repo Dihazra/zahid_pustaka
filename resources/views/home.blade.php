@@ -1,9 +1,12 @@
-@extends('layouts.template')
+@extends('layouts.sidebar')
 
 @section('content')
 <div class="d-flex justify-content-center">
+
+
     <div class="blur-container p-4 rounded-4 shadow-lg w-100" style="max-width: 1200px;">
         <h2 class="text-center mb-4 fw-bold">Semua Buku</h2>
+        
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
             @foreach ($books as $book)
@@ -24,3 +27,4 @@
     </div>
 </div>
 @endsection
+
