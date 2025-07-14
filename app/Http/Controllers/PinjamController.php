@@ -141,4 +141,22 @@ class PinjamController extends Controller
 
         return redirect()->back()->with('success', 'Peminjaman berhasil ditolak.');
     }
+
+    public function kembalikan($id)
+{
+    $pinjam = Pinjam::findOrFail($id);
+
+    // Hanya buku yang sedang dipinjam yang bisa dikembalikan
+    if ($pinjam->status === 'pinjam') {
+        $pinjam->status = 'kembali';
+        $pinjam->tanggal_kembali = Carbon::now();
+        $pinjam->keterangan = 'Buku telah dikembalikan.';
+        $pinjam->save();
+
+        return redirect()->back()->with('success', 'Buku berhasil ditandai sebagai dikembalikan.');
+    }
+
+    return redirect()->back()->with('error', 'Hanya buku yang sedang dipinjam yang bisa dikembalikan.');
+}
+
 }

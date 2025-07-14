@@ -249,7 +249,7 @@
 
 
 <div class="end-page">
-    <div class="container">
+    <div class="container py-4">
         <p>Perpustakaan Digital Libra &copy; 2025</p>
         <div class="footer-social-icons">
             <a href="#"><i class="bi bi-facebook"></i></a>

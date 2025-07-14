@@ -1,6 +1,26 @@
 @extends('layouts.sidebar')
 
 @section('content')
+
+<style>
+    .btn-view-lg {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    padding: 6px 20px;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: none;
+    transition: 0.2s ease-in-out;
+}
+.btn-view-lg:hover {
+    background-color: #FFA500;
+}
+</style>
     <div class="container mt-5">
         <div class="row">
             {{-- Gambar Buku --}}
@@ -12,7 +32,7 @@
             {{-- Detail Buku --}}
             <div class="col-md-8">
                 <h1 class="fw-bold">{{ $book->title }}</h1>
-                <p class="lead text-muted mb-3">oleh {{ $book->author }}</p>
+                <p class="lead text-white mb-3" ">oleh {{ $book->author }}</p>
                 <hr>
 
                 <p><strong>Deskripsi:</strong></p>
@@ -28,21 +48,32 @@
                     @else
                         {{-- Cek status ketersediaan buku --}}
                         @php
-                            $isBookLoaned = \App\Models\Pinjam::where('book_id', $book->id)
-                                ->whereIn('status', ['Dipinjam', 'Menunggu Konfirmasi'])
-                                ->exists();
+                        // Cek apakah user yang login sudah meminjam buku ini
+                        $isBookLoanedByUser = \App\Models\Pinjam::where('book_id', $book->id)
+                            ->where('user_id', auth()->id())
+                            ->whereIn('status', ['pinjam', 'menunggu konfirmasi'])
+                            ->exists();
+
+                        // Cek apakah buku sedang dipinjam oleh user lain
+                        $isBookLoanedByOthers = \App\Models\Pinjam::where('book_id', $book->id)
+                            ->where('user_id', '!=', auth()->id())
+                            ->whereIn('status', ['pinjam', 'menunggu konfirmasi'])
+                            ->exists();
                         @endphp
 
-                        @if ($isBookLoaned)
+                        @if ($isBookLoanedByUser)
                             <button class="btn btn-secondary btn-lg" disabled>Tidak Tersedia</button>
-                            <p class="text-danger mt-2">Buku ini sedang dipinjam atau menunggu konfirmasi.</p>
+                            <p class="text-danger mt-2">Anda sudah meminjam buku ini dan belum mengembalikannya.</p>
+                        @elseif ($isBookLoanedByOthers)
+                            <button class="btn btn-secondary btn-lg" disabled>Tidak Tersedia</button>
+                            <p class="text-danger mt-2">Buku sedang dipinjam oleh pengguna lain.</p>
                         @else
-                            {{-- Form untuk meminjam buku --}}
                             <form action="{{ route('pinjam.book', $book->id) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-success btn-lg">Pinjam Buku Ini</button>
+                                <button type="submit" class="btn btn-view-lg btn-lg">Pinjam Buku Ini</button>
                             </form>
                         @endif
+
                     @endguest
                 </div>
             </div>

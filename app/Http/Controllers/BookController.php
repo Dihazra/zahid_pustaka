@@ -11,7 +11,7 @@ use Illuminate\Routing\Controller;
 class BookController extends Controller
 {
     public function homepage(){
-        $books = Book::latest()->paginate(8);
+        $books = Book::all();
         return view('home', compact('books'));
     }
     public function show($id)
@@ -93,7 +93,10 @@ public function update(Request $request, $id)
         'cover_image' => $coverPath,
     ]);
 
-    return redirect('/')->with('Success', 'Data Buku Berhasil Diupdate.');
+    return redirect('/')->with('success', [
+        'message' => 'Data Buku Berhasil Diupdate.',
+        'type' => 'success'
+    ]);
 }
 
 

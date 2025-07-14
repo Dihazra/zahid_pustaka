@@ -2,9 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\MovieController;
-use App\Http\Middleware\RoleAdmin;
-use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PinjamController;
@@ -20,7 +17,7 @@ Route::get('/', [BookController::class, 'homepage'])->name('home');
 
 Route::get('/login', [AuthController::class, 'LoginForm'])->name('login');
 Route::post('/login',[AuthController::class,'login']);
-Route::post('/logout',[AuthController::class,'logout']);
+Route::post('/logout',[AuthController::class,'logout'])->name(  'logout');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -37,7 +34,11 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 
 Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
 
-Route::get('/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth', 'admin']);
+Route::get('/tambah', [AdminController::class, 'tambah'])->middleware(['auth', 'admin']);
+
+Route::get('/user-action', [AdminController::class, 'users'])->middleware(['auth', 'admin']);
+
+Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'admin']);
 
 Route::middleware(['auth'])->group(function () {
     // Route untuk memproses peminjaman buku
@@ -58,5 +59,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Rute untuk menolak pinjaman
     Route::post('/admin/pinjaman/{id}/tolak', [PinjamController::class, 'tolak'])->name('pinjam.tolak');
 });
+
+Route::post('/pinjam/{id}/kembalikan', [PinjamController::class, 'kembalikan'])->name('pinjam.kembalikan');
+
 
 
